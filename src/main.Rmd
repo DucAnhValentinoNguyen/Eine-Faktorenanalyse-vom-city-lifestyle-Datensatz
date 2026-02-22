@@ -1,0 +1,158 @@
+---
+title: "Eine Faktorenanalyse vom city lifestyle Datensatz"
+author: "Duc-Anh Nguyen"
+output:
+  html_document: default
+  pdf_document: default
+---
+
+
+```{r setup, include=FALSE}
+# Standard configuration
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
+library(tidyverse)
+library(psych)
+library(corrplot)
+```
+### Ziel:
+die zugrunde liegende Struktur der städtischen Lebensqualität: Wir wollen verstehen, ob die Lebensqualität eher durch wirtschaftliche Faktoren oder durch Umwelt-und Dichtefaktoren bestimmt wird. Damit schaffen wir eine fundierte Datenbasis für weitere Surveys oder politische Handlungsempfehlungen im Bereich der Stadtgeographie."
+
+
+### Datensatz
+Wir werden mit vielen verschiedenen Variablen arbeiten (Einkommen, Miete, Luftqualität, Dichte, etc.). Den Datensatz kann man auf https://www.kaggle.com/datasets/umuttuygurr/city-lifestyle-segmentation-dataset finden.
+```{r dataset}
+df = read.csv("../data/city_lifestyle_dataset.csv")
+dim(df)
+head(df)
+colnames(df)
+```
+
+
+Wir nehmen an dass wir nur eine Stichprobe von N = 30 hätten, also ziehen wie dann nur 30 Stichproben aus dem Datensatz zufällig aus. Dann bearbeiten wir den Datensatz damit er einsatzbereits zum Analysieren wäre.
+```{r sampling}
+set.seed(123)
+sample_df <-  df %>% 
+  sample_n(30) %>% 
+  select("population_density", "avg_income", "avg_rent", "air_quality_index", "public_transport_score", "happiness_score", "green_space_ratio") %>% 
+  rename(
+    Bevölkerungsdichte = "population_density", 
+    Einkommen = "avg_income", 
+    Miete = "avg_rent", 
+    Luftverschmutzung = "air_quality_index", 
+    OEPNV_Score = "public_transport_score", 
+    Zufriedenheit = "happiness_score", 
+    Gruenflaechen = "green_space_ratio"
+  )
+
+# Metadata
+attr(sample_df, "Beschreibung") <- "Pilotstudie zur Lebensqualität in 30 
+Städten"
+attr(sample_df$Bevölkerungsdichte, "Beschreibung") <- "Einwohner pro Quadratkilometer (Bevölkerungsdichte)"
+attr(sample_df$Einkommen, "Beschreibung") <- "Durchschnittliches Jahreseinkommen in USD"
+attr(sample_df$Miete, "Beschreibung") <- "Durchschnittliche monatliche Mietkosten in USD"
+attr(sample_df$Luftverschmutzung, "Beschreibung") <- "Air Quality Index (Höhere Werte = schlechtere Luft)"
+attr(sample_df$OEPNV_Score, "Beschreibung") <- "Index für die Qualität des öffentlichen Nahverkehrs (0-100)"
+attr(sample_df$Zufriedenheit, "Beschreibung") <- "Selbsteingeschätzte Lebenszufriedenheit (Skala 1-10)"
+attr(sample_df$Gruenflaechen, "Beschreibung") <- "Anteil der Grünflächen an der Gesamtfläche der Stadt (%)"
+attr(sample_df, "codebook") <- "Daten stammen aus dem Kaggle City Lifestyle Dataset. N=30."
+attr(sample_df, "Kontakt") <- "anh.nguyen1@campus.lmu.de"
+```
+
+
+### Methodik:
+Die Faktorenanalyse dient dazu, diese Komplexität zu reduzieren und die latenten Dimensionen zu finden, die das Leben in einer Stadt tatsächlich prägen:
+
+1. Komplexitätsreduktion (Variablen bündeln):
+Anstatt sieben einzelne Variablen getrennt zu betrachten, wollen wir sehen, welche Variablen zusammengehören. Wir wollen sehen, ob die Kovariablen stark korrelieren, dadurch später die Faktoren zu benennen, die man nicht direkt messen kann.
+
+2. Statistische Validierung für kleine Stichproben (N=30)
+Mit einer kleinen Durch die Iteration und die Wahl der richtigen Rotation könnten wir zeigen, durch welche Faktoren der Unterschiede zwischen den Städten erklärt werden können. Wir führen zuvor einen Test bzgl. des Kaiser-Meyer-Olkin-Kriteriums, um zu sehen, ob wir überhaupt mit einer Hauptkomponentenanalyse fortfahren sollten. Das KMO-Kriterium wird aus den partiellen Korrelationen zwischen Itempaaren berechnet.
+
+
+
+Hier schauen wir uns erstmal die Korrelationen zwischen allen Kovariablen.
+```{r correlation}
+# scaled data for accurate Factor Analysis
+sample_df <- scale(sample_df)
+
+cor_mat <- cor(sample_df, method = "pearson")
+# Bartlett-Test (Sind die Korrelationen signifikant von Null verschieden?)
+bartlett_test <- cortest.bartlett(cor_mat, n = 30)
+print(paste("Bartlett-Test p-Wert:", bartlett_test$p.value))
+
+corrplot(cor_mat, method = "color", addCoef.col = "black", tl.col = "black", title = "Korrellation: Stichprobe (N = 30)", mar = c(0,0,1,0))
+
+# Test mit Kaiser-Meyer-Olkin-Kriterium (Maß für die Eignung der Stichprobe)
+# Werte über 0.5 gelten als akzeptabel, über 0.7 als gut.
+kmo_test <- KMO(sample_df)
+print(kmo_test$MSA)
+```
+Starke signifikante positive Korrelation zwischen Einkommen und Miete, Einkommen und Zufriedenheit, Miete und Zufriedenheit, Luftverschmutzung und Bevölkerungsdichte, 
+
+Starke signifikante negative Korrelation zwischen Luftverschmutzung und Zufriedenheit, Luftverschmutzung und Grünflächen. 
+
+
+### PCA und Scree-Plot
+Wir führen hier vor der Faktorenanalyse eine PCA um herauszufinden, mit vielen Komponenten wir arbeiten sollten.
+```{r pca}
+# PCA for Scree Plot
+pca_res <- prcomp(sample_df, center = TRUE, scale. = TRUE)
+
+eigenvalues <- pca_res$sdev^2
+
+plot(eigenvalues, type = "b", pch = 0.19, col = "blue", 
+     main = "Scree Plot: Stichprobe", 
+     xlab = "Hauptkomponente", 
+     ylab = "Eigenwert (Varianz)") 
+abline(h = 1, col="red", lty=2, lwd = 2) # Kaiser Criterion
+legend("topright", legend = "Kaiser-Kriterium (EV = 1)", col = "red", lty = 2, lwd = 2)
+```
+
+Bei dem Elbogen hätten wir 2 Hauptkomponente.
+
+
+
+
+### Faktorenanalyse 
+Eine Faktorenanalyse mit Varimax Rotation und dem Minimum-Residual-Ansatz (minres) um latenten Strukturen zu identifizieren.
+
+Wir testen nun iterativ ein 2-Faktoren-Modell gegen ein 3-Faktoren-Modell und messen die Signifikanz anhand des RMSR (Root Mean Square Residual) und des p-Wertes des Modells.
+
+```{r FA1}
+# Iteration 1: Das 2-Faktoren-Modell (MinRes)
+fa_2 <- fa(sample_df, nfactors = 2, rotate = "varimax", fm = "minres")
+
+# Iteration 2: Das 3-Faktoren-Modell (MinRes)
+fa_3 <- fa(sample_df, nfactors = 3, rotate = "varimax", fm = "minres")
+
+# Signifikanz und Modellgüte (Fit) vergleichen:
+cat("\n--- MODELL-VERGLEICH ---\n")
+cat("2 Faktoren RMSR (kleiner ist besser):", round(fa_2$rms, 3), "\n")
+cat("3 Faktoren RMSR (kleiner ist besser):", round(fa_3$rms, 3), "\n")
+cat("2 Faktoren Tucker-Lewis Index (TLI, > 0.9 ist gut):", round(fa_2$TLI, 3), "\n")
+
+# Statistische Signifikanz des 2-Faktor-Modells (p-Wert)
+# Testet die Nullhypothese, dass 2 Faktoren ausreichen. (p > 0.05 ist hier GUT!)
+cat("Signifikanz des 2-Faktor-Modells (p-Wert):", fa_2$PVAL, "\n")
+```
+RMSR (0.05 vs. 0.02): Der Root Mean Square Residual misst den durchschnittlichen Fehler: der Wert von 0.05 beim 2-Faktoren-Modell ist gut. Dass er beim 3-Faktoren-Modell auf 0.02 sinkt, ist logisch: Je mehr Faktoren man hinzufügt, desto besser schmiegt sich das Modell an die Daten an.
+
+TLI (0.505): Der Tucker-Lewis Index hat den Wert von 0.505 ist sehr niedrig. Das bedeutet: das Modell erklärt die Daten deutlich besser als ein Zufallsmodell, aber es gibt noch viel ungeklärte Struktur.
+
+Signifikanz (p-Wert = 0): In der Faktorenanalyse ist ein p-Wert von 1.065288e-05 (signifikant) paradoxerweise oft ein Zeichen, dass das Modell nicht perfekt passt. Wir lehnen die Nullhypothese ab, dass das Modell die Daten exakt abbildet.
+
+
+
+### Interpretation:
+```{r FA2}
+print(fa_2$loadings, cutoff = 0.3)
+```
+Faktor/MR 1: Sozioökonomische Lebensqualität:
+Key Loadings: Einkommen (0.94), Miete(0.9), Zufriedenheit(0.84) und OEPNV_Score(0.63). Dieses Faktoren decken 42% der Varianz ab, und könnten sich so interpretieren lassen: Städte mit höheren Einkommen und Miete hätten auch "besseren" OEPNV und zufriedeneren BewöhnerInnen. Mit -0.43 bei Luftverschmutzung suggeriert, dass solche Städte auch wenig verschmutzt sind.
+
+Faktor/MR 2: Ubarner Belastungsfaktor:
+Key Loadings: Luftverschmutzung (0.8), Bevölkerungsdichte(0.79), Gruenflaechen (-0.75) und Zufriedenheit (-0.47). Diese Faktoren repräsentieren die Kosten einer Stadt: Wir sehen, dass höhere Bevölkerungsdichte kommt häufig mit höherer Luftverschmutzung und weinigeren Gruenflaechen, welche die Zufriedenheit der EinwöhnerInnen senken.
+
+Das Modell ist robust: wir erreichen eine kumulierte Varainzaufklärung von fast 74%, die zeigt, dass die 2 Faktoren die wesentlichen Unterschiede in der Lebensqualität unserer 30 Städte sehr gut erfassen. Ein interessanter Punkt ist die Luftverschmutzung: Sie lädt negativ auf dem ersten Faktor (-0.43) und stark positiv auf dem zweiten (0.80). Das zeigt, dass Umweltbelastung in meinem Modell zwei Seiten hat: Sie sinkt mit steigendem Wohlstand, steigt aber massiv mit der baulichen Dichte.
+
+

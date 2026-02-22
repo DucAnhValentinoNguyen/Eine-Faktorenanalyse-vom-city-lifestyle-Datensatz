@@ -1,0 +1,448 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+\documentclass[
+]{article}
+\usepackage{xcolor}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\usepackage{graphicx}
+\makeatletter
+\newsavebox\pandoc@box
+\newcommand*\pandocbounded[1]{% scales image to fit in text height/width
+  \sbox\pandoc@box{#1}%
+  \Gscale@div\@tempa{\textheight}{\dimexpr\ht\pandoc@box+\dp\pandoc@box\relax}%
+  \Gscale@div\@tempb{\linewidth}{\wd\pandoc@box}%
+  \ifdim\@tempb\p@<\@tempa\p@\let\@tempa\@tempb\fi% select the smaller of both
+  \ifdim\@tempa\p@<\p@\scalebox{\@tempa}{\usebox\pandoc@box}%
+  \else\usebox{\pandoc@box}%
+  \fi%
+}
+% Set default figure placement to htbp
+\def\fps@figure{htbp}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\usepackage{bookmark}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+\hypersetup{
+  pdftitle={Eine Faktorenanalyse vom city lifestyle Datensatz},
+  pdfauthor={Duc-Anh Nguyen},
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\title{Eine Faktorenanalyse vom city lifestyle Datensatz}
+\author{Duc-Anh Nguyen}
+\date{}
+
+\begin{document}
+\maketitle
+
+\subsubsection{Ziel:}\label{ziel}
+
+die zugrunde liegende Struktur der städtischen Lebensqualität: Wir
+wollen verstehen, ob die Lebensqualität eher durch wirtschaftliche
+Faktoren oder durch Umwelt-und Dichtefaktoren bestimmt wird. Damit
+schaffen wir eine fundierte Datenbasis für weitere Surveys oder
+politische Handlungsempfehlungen im Bereich der Stadtgeographie.''
+
+\subsubsection{Datensatz}\label{datensatz}
+
+Wir werden mit vielen verschiedenen Variablen arbeiten (Einkommen,
+Miete, Luftqualität, Dichte, etc.). Den Datensatz kann man auf
+\url{https://www.kaggle.com/datasets/umuttuygurr/city-lifestyle-segmentation-dataset}
+finden.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{df }\OtherTok{=} \FunctionTok{read.csv}\NormalTok{(}\StringTok{"../data/city\_lifestyle\_dataset.csv"}\NormalTok{)}
+\FunctionTok{dim}\NormalTok{(df)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 300  10
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{head}\NormalTok{(df)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##       city_name country population_density avg_income internet_penetration
+## 1     Old Vista  Europe               2775       3850                 86.4
+## 2     Beachport  Europe               3861       3700                 78.1
+## 3 Valleyborough  Europe               2562       4310                 80.1
+## 4          City  Europe               3192       3970                 81.2
+## 5         Falls  Europe               3496       4320                100.0
+## 6   North Falls  Europe               1444       4640                 78.5
+##   avg_rent air_quality_index public_transport_score happiness_score
+## 1     1310                43                   52.0             8.5
+## 2     1330                42                   62.8             8.1
+## 3     1330                39                   73.2             8.5
+## 4     1480                60                   49.2             8.5
+## 5     1510                64                   93.7             8.5
+## 6     1620                35                   51.6             8.4
+##   green_space_ratio
+## 1              23.8
+## 2              33.1
+## 3              40.2
+## 4              43.6
+## 5              42.5
+## 6              20.3
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{colnames}\NormalTok{(df)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##  [1] "city_name"              "country"                "population_density"    
+##  [4] "avg_income"             "internet_penetration"   "avg_rent"              
+##  [7] "air_quality_index"      "public_transport_score" "happiness_score"       
+## [10] "green_space_ratio"
+\end{verbatim}
+
+Wir nehmen an dass wir nur eine Stichprobe von N = 30 hätten, also
+ziehen wie dann nur 30 Stichproben aus dem Datensatz zufällig aus. Dann
+bearbeiten wir den Datensatz damit er einsatzbereits zum Analysieren
+wäre.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{set.seed}\NormalTok{(}\DecValTok{123}\NormalTok{)}
+\NormalTok{sample\_df }\OtherTok{\textless{}{-}}\NormalTok{  df }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{sample\_n}\NormalTok{(}\DecValTok{30}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{select}\NormalTok{(}\StringTok{"population\_density"}\NormalTok{, }\StringTok{"avg\_income"}\NormalTok{, }\StringTok{"avg\_rent"}\NormalTok{, }\StringTok{"air\_quality\_index"}\NormalTok{, }\StringTok{"public\_transport\_score"}\NormalTok{, }\StringTok{"happiness\_score"}\NormalTok{, }\StringTok{"green\_space\_ratio"}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{rename}\NormalTok{(}
+\NormalTok{    Bevölkerungsdichte }\OtherTok{=} \StringTok{"population\_density"}\NormalTok{, }
+    \AttributeTok{Einkommen =} \StringTok{"avg\_income"}\NormalTok{, }
+    \AttributeTok{Miete =} \StringTok{"avg\_rent"}\NormalTok{, }
+    \AttributeTok{Luftverschmutzung =} \StringTok{"air\_quality\_index"}\NormalTok{, }
+    \AttributeTok{OEPNV\_Score =} \StringTok{"public\_transport\_score"}\NormalTok{, }
+    \AttributeTok{Zufriedenheit =} \StringTok{"happiness\_score"}\NormalTok{, }
+    \AttributeTok{Gruenflaechen =} \StringTok{"green\_space\_ratio"}
+\NormalTok{  )}
+
+\CommentTok{\# Metadata}
+\FunctionTok{attr}\NormalTok{(sample\_df, }\StringTok{"Beschreibung"}\NormalTok{) }\OtherTok{\textless{}{-}} \StringTok{"Pilotstudie zur Lebensqualität in 30 }
+\StringTok{Städten"}
+\FunctionTok{attr}\NormalTok{(sample\_df}\SpecialCharTok{$}\NormalTok{Bevölkerungsdichte, }\StringTok{"Beschreibung"}\NormalTok{) }\OtherTok{\textless{}{-}} \StringTok{"Einwohner pro Quadratkilometer (Bevölkerungsdichte)"}
+\FunctionTok{attr}\NormalTok{(sample\_df}\SpecialCharTok{$}\NormalTok{Einkommen, }\StringTok{"Beschreibung"}\NormalTok{) }\OtherTok{\textless{}{-}} \StringTok{"Durchschnittliches Jahreseinkommen in USD"}
+\FunctionTok{attr}\NormalTok{(sample\_df}\SpecialCharTok{$}\NormalTok{Miete, }\StringTok{"Beschreibung"}\NormalTok{) }\OtherTok{\textless{}{-}} \StringTok{"Durchschnittliche monatliche Mietkosten in USD"}
+\FunctionTok{attr}\NormalTok{(sample\_df}\SpecialCharTok{$}\NormalTok{Luftverschmutzung, }\StringTok{"Beschreibung"}\NormalTok{) }\OtherTok{\textless{}{-}} \StringTok{"Air Quality Index (Höhere Werte = schlechtere Luft)"}
+\FunctionTok{attr}\NormalTok{(sample\_df}\SpecialCharTok{$}\NormalTok{OEPNV\_Score, }\StringTok{"Beschreibung"}\NormalTok{) }\OtherTok{\textless{}{-}} \StringTok{"Index für die Qualität des öffentlichen Nahverkehrs (0{-}100)"}
+\FunctionTok{attr}\NormalTok{(sample\_df}\SpecialCharTok{$}\NormalTok{Zufriedenheit, }\StringTok{"Beschreibung"}\NormalTok{) }\OtherTok{\textless{}{-}} \StringTok{"Selbsteingeschätzte Lebenszufriedenheit (Skala 1{-}10)"}
+\FunctionTok{attr}\NormalTok{(sample\_df}\SpecialCharTok{$}\NormalTok{Gruenflaechen, }\StringTok{"Beschreibung"}\NormalTok{) }\OtherTok{\textless{}{-}} \StringTok{"Anteil der Grünflächen an der Gesamtfläche der Stadt (\%)"}
+\FunctionTok{attr}\NormalTok{(sample\_df, }\StringTok{"codebook"}\NormalTok{) }\OtherTok{\textless{}{-}} \StringTok{"Daten stammen aus dem Kaggle City Lifestyle Dataset. N=30."}
+\FunctionTok{attr}\NormalTok{(sample\_df, }\StringTok{"Kontakt"}\NormalTok{) }\OtherTok{\textless{}{-}} \StringTok{"anh.nguyen1@campus.lmu.de"}
+\end{Highlighting}
+\end{Shaded}
+
+\subsubsection{Methodik:}\label{methodik}
+
+Die Faktorenanalyse dient dazu, diese Komplexität zu reduzieren und die
+latenten Dimensionen zu finden, die das Leben in einer Stadt tatsächlich
+prägen:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  Komplexitätsreduktion (Variablen bündeln): Anstatt sieben einzelne
+  Variablen getrennt zu betrachten, wollen wir sehen, welche Variablen
+  zusammengehören. Wir wollen sehen, ob die Kovariablen stark
+  korrelieren, dadurch später die Faktoren zu benennen, die man nicht
+  direkt messen kann.
+\item
+  Statistische Validierung für kleine Stichproben (N=30) Mit einer
+  kleinen Durch die Iteration und die Wahl der richtigen Rotation
+  könnten wir zeigen, durch welche Faktoren der Unterschiede zwischen
+  den Städten erklärt werden können. Wir führen zuvor einen Test bzgl.
+  des Kaiser-Meyer-Olkin-Kriteriums, um zu sehen, ob wir überhaupt mit
+  einer Hauptkomponentenanalyse fortfahren sollten. Das KMO-Kriterium
+  wird aus den partiellen Korrelationen zwischen Itempaaren berechnet.
+\end{enumerate}
+
+Hier schauen wir uns erstmal die Korrelationen zwischen allen
+Kovariablen.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# scaled data for accurate Factor Analysis}
+\NormalTok{sample\_df }\OtherTok{\textless{}{-}} \FunctionTok{scale}\NormalTok{(sample\_df)}
+
+\NormalTok{cor\_mat }\OtherTok{\textless{}{-}} \FunctionTok{cor}\NormalTok{(sample\_df, }\AttributeTok{method =} \StringTok{"pearson"}\NormalTok{)}
+\CommentTok{\# Bartlett{-}Test (Sind die Korrelationen signifikant von Null verschieden?)}
+\NormalTok{bartlett\_test }\OtherTok{\textless{}{-}} \FunctionTok{cortest.bartlett}\NormalTok{(cor\_mat, }\AttributeTok{n =} \DecValTok{30}\NormalTok{)}
+\FunctionTok{print}\NormalTok{(}\FunctionTok{paste}\NormalTok{(}\StringTok{"Bartlett{-}Test p{-}Wert:"}\NormalTok{, bartlett\_test}\SpecialCharTok{$}\NormalTok{p.value))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "Bartlett-Test p-Wert: 2.78121297788308e-28"
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{corrplot}\NormalTok{(cor\_mat, }\AttributeTok{method =} \StringTok{"color"}\NormalTok{, }\AttributeTok{addCoef.col =} \StringTok{"black"}\NormalTok{, }\AttributeTok{tl.col =} \StringTok{"black"}\NormalTok{, }\AttributeTok{title =} \StringTok{"Korrellation: Stichprobe (N = 30)"}\NormalTok{, }\AttributeTok{mar =} \FunctionTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{1}\NormalTok{,}\DecValTok{0}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\pandocbounded{\includegraphics[keepaspectratio]{main_files/figure-latex/correlation-1.pdf}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Test mit Kaiser{-}Meyer{-}Olkin{-}Kriterium (Maß für die Eignung der Stichprobe)}
+\CommentTok{\# Werte über 0.5 gelten als akzeptabel, über 0.7 als gut.}
+\NormalTok{kmo\_test }\OtherTok{\textless{}{-}} \FunctionTok{KMO}\NormalTok{(sample\_df)}
+\FunctionTok{print}\NormalTok{(kmo\_test}\SpecialCharTok{$}\NormalTok{MSA)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 0.574841
+\end{verbatim}
+
+Starke signifikante positive Korrelation zwischen Einkommen und Miete,
+Einkommen und Zufriedenheit, Miete und Zufriedenheit, Luftverschmutzung
+und Bevölkerungsdichte,
+
+Starke signifikante negative Korrelation zwischen Luftverschmutzung und
+Zufriedenheit, Luftverschmutzung und Grünflächen.
+
+\subsubsection{PCA und Scree-Plot}\label{pca-und-scree-plot}
+
+Wir führen hier vor der Faktorenanalyse eine PCA um herauszufinden, mit
+vielen Komponenten wir arbeiten sollten.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# PCA for Scree Plot}
+\NormalTok{pca\_res }\OtherTok{\textless{}{-}} \FunctionTok{prcomp}\NormalTok{(sample\_df, }\AttributeTok{center =} \ConstantTok{TRUE}\NormalTok{, }\AttributeTok{scale. =} \ConstantTok{TRUE}\NormalTok{)}
+
+\NormalTok{eigenvalues }\OtherTok{\textless{}{-}}\NormalTok{ pca\_res}\SpecialCharTok{$}\NormalTok{sdev}\SpecialCharTok{\^{}}\DecValTok{2}
+
+\FunctionTok{plot}\NormalTok{(eigenvalues, }\AttributeTok{type =} \StringTok{"b"}\NormalTok{, }\AttributeTok{pch =} \FloatTok{0.19}\NormalTok{, }\AttributeTok{col =} \StringTok{"blue"}\NormalTok{, }
+     \AttributeTok{main =} \StringTok{"Scree Plot: Stichprobe"}\NormalTok{, }
+     \AttributeTok{xlab =} \StringTok{"Hauptkomponente"}\NormalTok{, }
+     \AttributeTok{ylab =} \StringTok{"Eigenwert (Varianz)"}\NormalTok{) }
+\FunctionTok{abline}\NormalTok{(}\AttributeTok{h =} \DecValTok{1}\NormalTok{, }\AttributeTok{col=}\StringTok{"red"}\NormalTok{, }\AttributeTok{lty=}\DecValTok{2}\NormalTok{, }\AttributeTok{lwd =} \DecValTok{2}\NormalTok{) }\CommentTok{\# Kaiser Criterion}
+\FunctionTok{legend}\NormalTok{(}\StringTok{"topright"}\NormalTok{, }\AttributeTok{legend =} \StringTok{"Kaiser{-}Kriterium (EV = 1)"}\NormalTok{, }\AttributeTok{col =} \StringTok{"red"}\NormalTok{, }\AttributeTok{lty =} \DecValTok{2}\NormalTok{, }\AttributeTok{lwd =} \DecValTok{2}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\pandocbounded{\includegraphics[keepaspectratio]{main_files/figure-latex/pca-1.pdf}}
+
+Bei dem Elbogen hätten wir 2 Hauptkomponente.
+
+\subsubsection{Final Factor Analysis}\label{final-factor-analysis}
+
+Eine Faktorenanalyse mit Varimax Rotation und dem
+Minimum-Residual-Ansatz (minres) um latenten Strukturen zu
+identifizieren.
+
+Wir testen nun iterativ ein 2-Faktoren-Modell gegen ein
+3-Faktoren-Modell und messen die Signifikanz anhand des RMSR (Root Mean
+Square Residual) und des p-Wertes des Modells.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Iteration 1: Das 2{-}Faktoren{-}Modell (MinRes)}
+\NormalTok{fa\_2 }\OtherTok{\textless{}{-}} \FunctionTok{fa}\NormalTok{(sample\_df, }\AttributeTok{nfactors =} \DecValTok{2}\NormalTok{, }\AttributeTok{rotate =} \StringTok{"varimax"}\NormalTok{, }\AttributeTok{fm =} \StringTok{"minres"}\NormalTok{)}
+
+\CommentTok{\# Iteration 2: Das 3{-}Faktoren{-}Modell (MinRes)}
+\NormalTok{fa\_3 }\OtherTok{\textless{}{-}} \FunctionTok{fa}\NormalTok{(sample\_df, }\AttributeTok{nfactors =} \DecValTok{3}\NormalTok{, }\AttributeTok{rotate =} \StringTok{"varimax"}\NormalTok{, }\AttributeTok{fm =} \StringTok{"minres"}\NormalTok{)}
+
+\CommentTok{\# Signifikanz und Modellgüte (Fit) vergleichen:}
+\FunctionTok{cat}\NormalTok{(}\StringTok{"}\SpecialCharTok{\textbackslash{}n}\StringTok{{-}{-}{-} MODELL{-}VERGLEICH {-}{-}{-}}\SpecialCharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## --- MODELL-VERGLEICH ---
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{cat}\NormalTok{(}\StringTok{"2 Faktoren RMSR (kleiner ist besser):"}\NormalTok{, }\FunctionTok{round}\NormalTok{(fa\_2}\SpecialCharTok{$}\NormalTok{rms, }\DecValTok{3}\NormalTok{), }\StringTok{"}\SpecialCharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 2 Faktoren RMSR (kleiner ist besser): 0.05
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{cat}\NormalTok{(}\StringTok{"3 Faktoren RMSR (kleiner ist besser):"}\NormalTok{, }\FunctionTok{round}\NormalTok{(fa\_3}\SpecialCharTok{$}\NormalTok{rms, }\DecValTok{3}\NormalTok{), }\StringTok{"}\SpecialCharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 3 Faktoren RMSR (kleiner ist besser): 0.02
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{cat}\NormalTok{(}\StringTok{"2 Faktoren Tucker{-}Lewis Index (TLI, \textgreater{} 0.9 ist gut):"}\NormalTok{, }\FunctionTok{round}\NormalTok{(fa\_2}\SpecialCharTok{$}\NormalTok{TLI, }\DecValTok{3}\NormalTok{), }\StringTok{"}\SpecialCharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 2 Faktoren Tucker-Lewis Index (TLI, > 0.9 ist gut): 0.505
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Statistische Signifikanz des 2{-}Faktor{-}Modells (p{-}Wert)}
+\CommentTok{\# Testet die Nullhypothese, dass 2 Faktoren ausreichen. (p \textgreater{} 0.05 ist hier GUT!)}
+\FunctionTok{cat}\NormalTok{(}\StringTok{"Signifikanz des 2{-}Faktor{-}Modells (p{-}Wert):"}\NormalTok{, fa\_2}\SpecialCharTok{$}\NormalTok{PVAL, }\StringTok{"}\SpecialCharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Signifikanz des 2-Faktor-Modells (p-Wert): 1.065288e-05
+\end{verbatim}
+
+RMSR (0.05 vs.~0.02): Der Root Mean Square Residual misst den
+durchschnittlichen Fehler: der Wert von 0.05 beim 2-Faktoren-Modell ist
+gut. Dass er beim 3-Faktoren-Modell auf 0.02 sinkt, ist logisch: Je mehr
+Faktoren man hinzufügt, desto besser schmiegt sich das Modell an die
+Daten an.
+
+TLI (0.505): Der Tucker-Lewis Index hat den Wert von 0.505 ist sehr
+niedrig. Das bedeutet: das Modell erklärt die Daten deutlich besser als
+ein Zufallsmodell, aber es gibt noch viel ungeklärte Struktur.
+
+Signifikanz (p-Wert = 0): In der Faktorenanalyse ist ein p-Wert von
+1.065288e-05 (signifikant) paradoxerweise oft ein Zeichen, dass das
+Modell nicht perfekt passt. Wir lehnen die Nullhypothese ab, dass das
+Modell die Daten exakt abbildet.
+
+\subsubsection{Interpretation:}\label{interpretation}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{print}\NormalTok{(fa\_2}\SpecialCharTok{$}\NormalTok{loadings, }\AttributeTok{cutoff =} \FloatTok{0.3}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Loadings:
+##                    MR1    MR2   
+## Bevölkerungsdichte         0.787
+## Einkommen           0.940       
+## Miete               0.900       
+## Luftverschmutzung  -0.428  0.801
+## OEPNV_Score         0.629  0.322
+## Zufriedenheit       0.835 -0.471
+## Gruenflaechen             -0.750
+## 
+##                  MR1   MR2
+## SS loadings    2.970 2.200
+## Proportion Var 0.424 0.314
+## Cumulative Var 0.424 0.739
+\end{verbatim}
+
+Faktor/MR 1: Sozioökonomische Lebensqualität: Key Loadings: Einkommen
+(0.94), Miete(0.9), Zufriedenheit(0.84) und OEPNV\_Score(0.63). Dieses
+Faktoren decken 42\% der Varianz ab, und könnten sich so interpretieren
+lassen: Städte mit höheren Einkommen und Miete hätten auch ``besseren''
+OEPNV und zufriedeneren BewöhnerInnen. Mit -0.43 bei Luftverschmutzung
+suggeriert, dass solche Städte auch wenig verschmutzt sind.
+
+Faktor/MR 2: Ubarner Belastungsfaktor: Key Loadings: Luftverschmutzung
+(0.8), Bevölkerungsdichte(0.79), Gruenflaechen (-0.75) und Zufriedenheit
+(-0.47). Diese Faktoren repräsentieren die Kosten einer Stadt: Wir
+sehen, dass höhere Bevölkerungsdichte kommt häufig mit höherer
+Luftverschmutzung und weinigeren Gruenflaechen, welche die Zufriedenheit
+der EinwöhnerInnen senken.
+
+Das Modell ist robust: wir erreichen eine kumulierte Varainzaufklärung
+von fast 74\%, die zeigt, dass die 2 Faktoren die wesentlichen
+Unterschiede in der Lebensqualität unserer 30 Städte sehr gut erfassen.
+Ein interessanter Punkt ist die Luftverschmutzung: Sie lädt negativ auf
+dem ersten Faktor (-0.43) und stark positiv auf dem zweiten (0.80). Das
+zeigt, dass Umweltbelastung in meinem Modell zwei Seiten hat: Sie sinkt
+mit steigendem Wohlstand, steigt aber massiv mit der baulichen Dichte.
+
+\end{document}
